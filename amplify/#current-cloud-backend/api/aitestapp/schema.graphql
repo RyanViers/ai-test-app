@@ -1,0 +1,38 @@
+type Asset @model {
+  id: ID! @primaryKey
+  name: String!
+  description: String
+  purchaseDate: AWSDateTime!
+  purchasePrice: Float!
+  currentValue: Float
+  category: String!
+  location: String
+  status: AssetStatus!
+  documents: [Document] @hasMany
+  maintenanceRecords: [MaintenanceRecord] @hasMany
+}
+
+type Document @model {
+  id: ID! @primaryKey
+  title: String!
+  url: String!
+  type: String!
+  assetID: ID! @index
+  asset: Asset! @belongsTo(fields: ["assetID"])
+}
+
+type MaintenanceRecord @model {
+  id: ID! @primaryKey
+  date: AWSDateTime!
+  description: String!
+  cost: Float!
+  assetID: ID! @index
+  asset: Asset! @belongsTo(fields: ["assetID"])
+}
+
+enum AssetStatus {
+  ACTIVE
+  MAINTENANCE
+  RETIRED
+  SOLD
+}
